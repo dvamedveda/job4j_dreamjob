@@ -1,17 +1,9 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: blocker
-  Date: 24.11.2020
-  Time: 09:00
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="ru.job4j.dream.store.Store" %>
-<%@ page import="ru.job4j.dream.model.Post" %>
+<%@ page import="ru.job4j.dream.model.Candidate" %>
 <!doctype html>
 <html lang="en">
 <head>
-
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -33,10 +25,10 @@
 </head>
 <body>
 <div class="container pt-3">
-    <dib class="row">
+    <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Вакансии
+                Кандидаты
             </div>
             <div class="card-body">
                 <table class="table">
@@ -46,9 +38,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <% for (Post post : Store.getInst().findAllPosts()) { %>
+                    <% for (Candidate candidate : Store.getInst().findAllCandidates()) { %>
                     <tr>
-                        <td><%= post.getName() %>
+                        <td><%= candidate.getName() %>
                         </td>
                     </tr>
                     <% } %>
@@ -56,7 +48,7 @@
                 </table>
             </div>
         </div>
-    </dib>
+    </div>
 </div>
 </body>
 </html>

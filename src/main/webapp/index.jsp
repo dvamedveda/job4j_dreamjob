@@ -30,7 +30,7 @@
             </tr>
             </thead>
             <tbody>
-            <% for (Post post : Store.getInst().findAll()) { %>
+            <% for (Post post : Store.getInst().findAllPosts()) { %>
             <tr>
                 <td>
                     <%= post.getName() %>
