@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Store {
     private static final Store INST = new Store();
     private static AtomicInteger POST_ID = new AtomicInteger(4);
+    private static AtomicInteger CANDIDATE_ID = new AtomicInteger(4);
 
     private Map<Integer, Post> posts = new ConcurrentHashMap<>();
 
@@ -40,8 +41,13 @@ public class Store {
         return this.candidates.values();
     }
 
-    public void save(Post post) {
+    public void savePost(Post post) {
         post.setId(POST_ID.incrementAndGet());
         posts.put(post.getId(), post);
+    }
+
+    public void saveCandidate(Candidate candidate) {
+        candidate.setId(CANDIDATE_ID.incrementAndGet());
+        candidates.put(candidate.getId(), candidate);
     }
 }
