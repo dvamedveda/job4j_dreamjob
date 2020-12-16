@@ -21,6 +21,12 @@ public class PostServlet extends HttpServlet {
                         Integer.valueOf(req.getParameter("id")),
                         req.getParameter("name"),
                         req.getParameter("desc"), 1L));
-        resp.sendRedirect(req.getContextPath() + "/posts.jsp");
+        resp.sendRedirect(req.getContextPath() + "/posts.do");
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("posts", Store.getInst().findAllPosts());
+        req.getRequestDispatcher("posts.jsp").forward(req, resp);
     }
 }
