@@ -13,15 +13,15 @@ import static org.hamcrest.CoreMatchers.is;
 /**
  * Тесты класса ru.job4j.dream.store.Model.
  */
-public class StoreTest {
+public class MemStoreTest {
 
     /**
      * Проверяем, что в хранилище находится три вакансии.
      */
     @Test
     public void whenCreateInstThenHaveThreePosts() {
-        Store store = Store.getInst();
-        List<Post> posts = new ArrayList<>(store.findAllPosts());
+        MemStore memStore = MemStore.getInst();
+        List<Post> posts = new ArrayList<>(memStore.findAllPosts());
         for (int i = 0; i < posts.size(); i++) {
             Assert.assertThat(posts.get(i).getId(), is(i + 1));
         }
@@ -33,8 +33,8 @@ public class StoreTest {
      */
     @Test
     public void whenCreateInstThenHaveThreeCandidates() {
-        Store store = Store.getInst();
-        List<Candidate> candidates = new ArrayList<>(store.findAllCandidates());
+        MemStore memStore = MemStore.getInst();
+        List<Candidate> candidates = new ArrayList<>(memStore.findAllCandidates());
         for (int i = 0; i < candidates.size(); i++) {
             Assert.assertThat(candidates.get(i).getId(), is(i + 1));
         }
