@@ -60,10 +60,10 @@ public class Post {
             return false;
         }
         Post post = (Post) o;
-        return id == post.id &&
-                created == post.created &&
-                name.equals(post.name) &&
-                desc.equals(post.desc);
+        return id == post.id
+                && created == post.created
+                && name.equals(post.name)
+                && desc.equals(post.desc);
     }
 
     @Override
