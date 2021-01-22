@@ -35,17 +35,39 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Кандидаты</th>
+                        <th scope="col">Фото</th>
+                        <th scope="col">Имя кандидата</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${candidates}" var="candidate">
+                    <c:forEach items="${requestScope.candidates}" var="candidate">
                         <tr>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${candidate.photoId != 0}">
+                                        <div class="container">
+                                            <div class="row">
+                                                <img src="download.do?image_id=${candidate.photoId}"
+                                                     class="rounded float-start" alt="Фото кандидата"
+                                                     width="110" height="110">
+                                            </div>
+                                            <div class="row">
+                                                <a href="download.do?image_id=${candidate.photoId}">
+                                                    <button type="button" class="btn btn-outline-secondary">
+                                                        <i class="fa fa-download"></i>
+                                                        Скачать
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                </c:choose>
+                            </td>
                             <td>
                                 <a href='<c:url value="/candidate/edit.jsp?id=${candidate.id}"/>'>
                                     <i class="fa fa-edit mr-3"></i>
                                 </a>
-                                <c:out value="${candidate.name}" />
+                                <c:out value="${candidate.name}"/>
                             </td>
                         </tr>
                     </c:forEach>

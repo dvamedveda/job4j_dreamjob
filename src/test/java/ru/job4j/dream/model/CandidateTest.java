@@ -41,4 +41,23 @@ public class CandidateTest {
         Candidate candidate2 = new Candidate(1, "test");
         Assert.assertTrue(candidate1.equals(candidate2));
     }
+
+    /**
+     * Здесь проверяется что по умолчанию у кандидата не создается фото.
+     */
+    @Test
+    public void whenCreateCandidateThenDefaultFoto() {
+        Candidate candidate1 = new Candidate(1, "test");
+        Assert.assertThat(candidate1.getPhotoId(), is(0));
+    }
+
+    /**
+     * Здесь проверяется сохранения фото в объекте кандидата.
+     */
+    @Test
+    public void whenSetPhotoForCandidateThenSuccess() {
+        Candidate candidate1 = new Candidate(1, "test");
+        candidate1.setPhotoId(11);
+        Assert.assertThat(candidate1.getPhotoId(), is(11));
+    }
 }

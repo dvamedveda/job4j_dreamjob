@@ -75,7 +75,11 @@ public class PsqlStore implements Store {
              PreparedStatement statement = connection.prepareStatement("select * from candidate")) {
             try (ResultSet result = statement.executeQuery()) {
                 while (result.next()) {
-                    candidates.add(new Candidate(result.getInt("id"), result.getString("name")));
+                    Candidate candidate = new Candidate(
+                            result.getInt("id"),
+                            result.getString("name"));
+                    candidate.setPhotoId(result.getInt("photo"));
+                    candidates.add(candidate);
                 }
             }
         } catch (Exception e) {
@@ -136,7 +140,10 @@ public class PsqlStore implements Store {
             statement.execute();
             try (ResultSet result = statement.getResultSet()) {
                 while (result.next()) {
-                    candidate = new Candidate(result.getInt("id"), result.getString("name"));
+                    candidate = new Candidate(
+                            result.getInt("id"),
+                            result.getString("name"));
+                    candidate.setPhotoId(result.getInt("photo"));
                 }
             }
         } catch (Exception e) {
@@ -178,10 +185,11 @@ public class PsqlStore implements Store {
     }
 
     private Candidate createCandidate(Candidate candidate) {
-        String command = "insert into candidate(name) values (?)";
+        String command = "insert into candidate(name, photo) values (?, ?)";
         try (Connection conn = pool.getConnection();
              PreparedStatement statement = conn.prepareStatement(command, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, candidate.getName());
+            statement.setInt(2, candidate.getPhotoId());
             statement.execute();
             try (ResultSet result = statement.getGeneratedKeys()) {
                 if (result.next()) {
@@ -195,11 +203,62 @@ public class PsqlStore implements Store {
     }
 
     private void updateCandidate(Candidate candidate) {
-        String command = "update candidate set name = ? where id = ?";
+        String command = "update candidate set name = ?, photo = ? where id = ?";
         try (Connection conn = pool.getConnection();
              PreparedStatement statement = conn.prepareStatement(command)) {
             statement.setString(1, candidate.getName());
-            statement.setInt(2, candidate.getId());
+            statement.setInt(2, candidate.getPhotoId());
+            statement.setInt(3, candidate.getId());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public int saveImage(String path) {
+        String command = "insert into photo(path) values (?)";
+        int photoId = 0;
+        try (Connection conn = pool.getConnection();
+             PreparedStatement statement = conn.prepareStatement(command, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, path);
+            statement.execute();
+            try (ResultSet result = statement.getGeneratedKeys()) {
+                if (result.next()) {
+                    photoId = result.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return photoId;
+    }
+
+    @Override
+    public String getImagePath(int id) {
+        String path = "";
+        String command = "select * from photo where id = ?";
+        try (Connection conn = pool.getConnection();
+             PreparedStatement statement = conn.prepareStatement(command)) {
+            statement.setInt(1, id);
+            statement.execute();
+            try (ResultSet result = statement.getResultSet()) {
+                while (result.next()) {
+                    path = result.getString("path");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return path;
+    }
+
+    @Override
+    public void removeImage(int id) {
+        String command = "delete from photo where id = ?";
+        try (Connection conn = pool.getConnection();
+             PreparedStatement statement = conn.prepareStatement(command)) {
+            statement.setInt(1, id);
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

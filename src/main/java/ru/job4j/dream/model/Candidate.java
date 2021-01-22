@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Candidate {
     private int id;
     private String name;
+    private int photoId = 0;
 
     public Candidate(int id, String name) {
         this.id = id;
@@ -28,6 +29,14 @@ public class Candidate {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getPhotoId() {
+        return this.photoId;
+    }
+
+    public void setPhotoId(int photoId) {
+        this.photoId = photoId;
     }
 
     @Override

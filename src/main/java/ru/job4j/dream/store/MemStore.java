@@ -4,6 +4,7 @@ import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,10 +16,11 @@ public class MemStore implements Store {
     private static final MemStore INST = new MemStore();
     private static final AtomicInteger POST_ID = new AtomicInteger(4);
     private static final AtomicInteger CANDIDATE_ID = new AtomicInteger(4);
+    private static final AtomicInteger PHOTO_ID = new AtomicInteger();
 
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
-
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
+    private final Map<Integer, String> photo = new ConcurrentHashMap<>();
 
     private MemStore() {
         posts.put(1, new Post(1, "Junior Java Job", "Работа для джуниор Java разработчика", 1L));
@@ -61,5 +63,22 @@ public class MemStore implements Store {
 
     public Candidate findCandidateById(int id) {
         return candidates.get(id);
+    }
+
+    @Override
+    public int saveImage(String path) {
+        int id = PHOTO_ID.incrementAndGet();
+        this.photo.put(id, path);
+        return id;
+    }
+
+    @Override
+    public String getImagePath(int id) {
+        return this.photo.get(id);
+    }
+
+    @Override
+    public void removeImage(int id) {
+        this.photo.remove(id);
     }
 }

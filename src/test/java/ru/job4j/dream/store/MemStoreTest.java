@@ -20,7 +20,7 @@ public class MemStoreTest {
      */
     @Test
     public void whenCreateInstThenHaveThreePosts() {
-        MemStore memStore = MemStore.getInst();
+        Store memStore = MemStore.getInst();
         List<Post> posts = new ArrayList<>(memStore.findAllPosts());
         for (int i = 0; i < posts.size(); i++) {
             Assert.assertThat(posts.get(i).getId(), is(i + 1));
@@ -33,11 +33,31 @@ public class MemStoreTest {
      */
     @Test
     public void whenCreateInstThenHaveThreeCandidates() {
-        MemStore memStore = MemStore.getInst();
+        Store memStore = MemStore.getInst();
         List<Candidate> candidates = new ArrayList<>(memStore.findAllCandidates());
         for (int i = 0; i < candidates.size(); i++) {
             Assert.assertThat(candidates.get(i).getId(), is(i + 1));
         }
         Assert.assertThat(candidates.size(), is(3));
+    }
+
+    /**
+     * Проверяем, что картинки успешно сохраняются и удаляются.
+     * В одном тесте, так как работаем с синглтоном из-за чего не гарантируется
+     * правильное выполнение тестов в разном порядке.
+     */
+    @Test
+    public void whenSaveImageThenSuccess() {
+        Store store = MemStore.getInst();
+        store.saveImage("abcd");
+        store.saveImage("dcba");
+        store.saveImage("aaaa");
+        Assert.assertThat(store.getImagePath(1), is("abcd"));
+        Assert.assertThat(store.getImagePath(2), is("dcba"));
+        Assert.assertThat(store.getImagePath(3), is("aaaa"));
+        store.removeImage(2);
+        Assert.assertThat(store.getImagePath(1), is("abcd"));
+        Assert.assertNull(store.getImagePath(2));
+        Assert.assertThat(store.getImagePath(3), is("aaaa"));
     }
 }

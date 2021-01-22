@@ -1,6 +1,8 @@
-﻿<%@ page import="ru.job4j.dream.model.Candidate" %>
+﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="ru.job4j.dream.model.Candidate" %>
 <%@ page import="ru.job4j.dream.store.PsqlStore" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page isELIgnored="false" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,30 +25,61 @@
     <title>Работа мечты</title>
 </head>
 <body>
+<%!
+    Candidate candidate;
+%>
 <%
     String id = request.getParameter("id");
-    Candidate candidate = new Candidate(0, "");
-    if (id != null) {
-        candidate = PsqlStore.getInst().findCandidateById(Integer.valueOf(id));
+    candidate = new Candidate(0, "");
+    if (id != null && !id.equals("")) {
+        candidate = PsqlStore.getInst().findCandidateById(Integer.parseInt(id));
     }
+    request.setAttribute("candidate", candidate);
 %>
 <div class="container pt-3">
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
                 <% if (id == null) { %>
-                    Новый кандидат
+                Новый кандидат
                 <% } else { %>
-                    Редактирование кандидата
+                Редактирование кандидата
                 <% } %>
             </div>
             <div class="card-body">
+                <c:if test='${candidate.photoId > 0 and param["image"] == null}'>
+                    <img src="${pageContext.request.contextPath}/download.do?image_id=${candidate.photoId}"
+                         class="rounded float-start" alt="Фото кандидата"
+                         width="150" height="150"
+                    >
+                </c:if>
+                <c:if test='${param["image"] > 0 and param["image"] != null}'>
+                    <img src="${pageContext.request.contextPath}/download.do?image_id=${param['image']}"
+                         class="rounded float-start" alt="Фото кандидата"
+                         width="150" height="150"
+                    >
+                </c:if>
                 <form action="<%=request.getContextPath()%>/candidates.do?id=<%=candidate.getId()%>" method="post">
                     <div class="form-group">
                         <label>Имя</label>
-                        <input type="text" class="form-control" name="name" value="<%=candidate.getName()%>">
+                        <input type="text" class="form-control" name="name" value="${candidate.name}">
+                        <c:if test='${param["image"] > 0}'>
+                            <input type="hidden" name="new_image" value="${param['image']}">
+                        </c:if>
+                        <input type="hidden" name="old_image" value="${candidate.photoId}">
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </div>
+            <div class="card-body">
+                <form action="<c:url value='/upload?id=${param.id}'/>" method="post" enctype="multipart/form-data">
+                    <c:if test='${param["image"] == -1}'>
+                        <c:out value="Нужно выбрать файл!"/>
+                    </c:if>
+                    <div class="checkbox">
+                        <input type="file" name="file">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Загрузить аватар</button>
                 </form>
             </div>
         </div>
