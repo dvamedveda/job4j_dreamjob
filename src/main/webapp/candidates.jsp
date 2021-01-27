@@ -49,19 +49,12 @@
                                             <div class="carousel-inner">
                                                 <c:forEach var="carusel_id" items="${candidate.userPhotos}">
                                                     <div class="carousel-item<c:if test="${carusel_id == candidate.userPhotos[0]}"><c:out value=" active"/></c:if>">
-                                                        <img src="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}" height="150" class="d-block w-100" alt="...">
-                                                        <div class="container" >
-                                                            <div class="row align-items-center">
-                                                                <div class="col">
-                                                                    <a href="download.do?image_id=${carusel_id}">
-                                                                        <button type="button" class="btn btn-outline-secondary">
-                                                                                <%--                                                                            <i class="fa fa-download"></i>--%>
-                                                                            Скачать
-                                                                        </button>
-                                                                    </a>
+                                                            <div class="card" style="height: 200px; width: 150px;">
+                                                                <img src="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}" class="card-img-top" style="height: 120px; width: 120px;" alt="...">
+                                                                <div class="card-body">
+                                                                    <a href="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}" class="btn btn-primary">Скачать</a>
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                     </div>
                                                 </c:forEach>
                                             </div>
