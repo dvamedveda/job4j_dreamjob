@@ -43,25 +43,39 @@
                     <c:forEach items="${requestScope.candidates}" var="candidate">
                         <tr>
                             <td>
-                                <c:choose>
-                                    <c:when test="${candidate.photoId != 0}">
-                                        <div class="container">
-                                            <div class="row">
-                                                <img src="download.do?image_id=${candidate.photoId}"
-                                                     class="rounded float-start" alt="Фото кандидата"
-                                                     width="110" height="110">
+                                <c:if test="${candidate.userPhotos.size() != 0}">
+                                    <div class="container" style="width:150px" >
+                                        <div id="carousel_${candidate.id}" class="carousel slide" data-ride="carousel" >
+                                            <div class="carousel-inner">
+                                                <c:forEach var="carusel_id" items="${candidate.userPhotos}">
+                                                    <div class="carousel-item<c:if test="${carusel_id == candidate.userPhotos[0]}"><c:out value=" active"/></c:if>">
+                                                        <img src="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}" height="150" class="d-block w-100" alt="...">
+                                                        <div class="container" >
+                                                            <div class="row align-items-center">
+                                                                <div class="col">
+                                                                    <a href="download.do?image_id=${carusel_id}">
+                                                                        <button type="button" class="btn btn-outline-secondary">
+                                                                                <%--                                                                            <i class="fa fa-download"></i>--%>
+                                                                            Скачать
+                                                                        </button>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
                                             </div>
-                                            <div class="row">
-                                                <a href="download.do?image_id=${candidate.photoId}">
-                                                    <button type="button" class="btn btn-outline-secondary">
-                                                        <i class="fa fa-download"></i>
-                                                        Скачать
-                                                    </button>
-                                                </a>
-                                            </div>
+                                            <a class="carousel-control-prev" href="#carousel_${candidate.id}" role="button" data-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#carousel_${candidate.id}" role="button" data-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
                                         </div>
-                                    </c:when>
-                                </c:choose>
+                                    </div>
+                                </c:if>
                             </td>
                             <td>
                                 <a href='<c:url value="/candidate/edit.jsp?id=${candidate.id}"/>'>

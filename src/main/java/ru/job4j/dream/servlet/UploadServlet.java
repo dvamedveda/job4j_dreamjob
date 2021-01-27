@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,14 +53,14 @@ public class UploadServlet extends HttpServlet {
                         out.flush();
                     }
                 }
+                store.saveImage(Integer.parseInt(req.getParameter("id")), path);
             }
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
-        int imageId = store.saveImage(path);
         String redirect = "";
         if (successUpload) {
-            redirect = "/candidate/edit.jsp?id=" + req.getParameter("id") + "&image=" + imageId;
+            redirect = "/candidate/edit.jsp?id=" + req.getParameter("id");
         } else {
             redirect = "/candidate/edit.jsp?id=" + req.getParameter("id") + "&image=-1";
         }

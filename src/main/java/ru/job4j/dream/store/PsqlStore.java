@@ -78,7 +78,7 @@ public class PsqlStore implements Store {
                     Candidate candidate = new Candidate(
                             result.getInt("id"),
                             result.getString("name"));
-                    candidate.setPhotoId(result.getInt("photo"));
+                    candidate.setUserPhotos(this.getUserPhotos(result.getInt("id")));
                     candidates.add(candidate);
                 }
             }
@@ -143,7 +143,7 @@ public class PsqlStore implements Store {
                     candidate = new Candidate(
                             result.getInt("id"),
                             result.getString("name"));
-                    candidate.setPhotoId(result.getInt("photo"));
+                    candidate.setUserPhotos(this.getUserPhotos(result.getInt("id")));
                 }
             }
         } catch (Exception e) {
@@ -185,17 +185,22 @@ public class PsqlStore implements Store {
     }
 
     private Candidate createCandidate(Candidate candidate) {
-        String command = "insert into candidate(name, photo) values (?, ?)";
+        String command = "insert into candidate(name) values (?)";
         try (Connection conn = pool.getConnection();
              PreparedStatement statement = conn.prepareStatement(command, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, candidate.getName());
-            statement.setInt(2, candidate.getPhotoId());
             statement.execute();
             try (ResultSet result = statement.getGeneratedKeys()) {
                 if (result.next()) {
                     candidate.setId(result.getInt(1));
                 }
             }
+            String updateCommand = "update photo set user_id = ? where user_id = 0";
+            try (PreparedStatement updateStatement = conn.prepareStatement(updateCommand)) {
+                updateStatement.setInt(1, candidate.getId());
+                updateStatement.executeUpdate();
+            }
+            candidate.setUserPhotos(this.getUserPhotos(candidate.getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -203,12 +208,11 @@ public class PsqlStore implements Store {
     }
 
     private void updateCandidate(Candidate candidate) {
-        String command = "update candidate set name = ?, photo = ? where id = ?";
+        String command = "update candidate set name = ? where id = ?";
         try (Connection conn = pool.getConnection();
              PreparedStatement statement = conn.prepareStatement(command)) {
             statement.setString(1, candidate.getName());
-            statement.setInt(2, candidate.getPhotoId());
-            statement.setInt(3, candidate.getId());
+            statement.setInt(2, candidate.getId());
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -216,12 +220,13 @@ public class PsqlStore implements Store {
     }
 
     @Override
-    public int saveImage(String path) {
-        String command = "insert into photo(path) values (?)";
+    public int saveImage(int userId, String path) {
+        String command = "insert into photo(path, user_id) values (?, ?)";
         int photoId = 0;
         try (Connection conn = pool.getConnection();
              PreparedStatement statement = conn.prepareStatement(command, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, path);
+            statement.setInt(2, userId);
             statement.execute();
             try (ResultSet result = statement.getGeneratedKeys()) {
                 if (result.next()) {
@@ -263,5 +268,24 @@ public class PsqlStore implements Store {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<Integer> getUserPhotos(int userId) {
+        String command = "select id from photo where user_id = ?";
+        ArrayList<Integer> userPhotos = new ArrayList<>();
+        try (Connection conn = pool.getConnection();
+             PreparedStatement statement = conn.prepareStatement(command)) {
+            statement.setInt(1, userId);
+            statement.execute();
+            try (ResultSet result = statement.getResultSet()) {
+                while (result.next()) {
+                    userPhotos.add(result.getInt("id"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userPhotos;
     }
 }

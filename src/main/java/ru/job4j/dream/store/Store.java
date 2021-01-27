@@ -3,7 +3,9 @@ package ru.job4j.dream.store;
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public interface Store {
 
@@ -54,10 +56,11 @@ public interface Store {
     /**
      * Сохранить фото в хранилище.
      *
+     * @param userId идентификатор пользователя.
      * @param path путь к фото.
      * @return индентификатор фото.
      */
-    int saveImage(String path);
+    int saveImage(int userId, String path);
 
     /**
      * Получить путь к фото по идентификатору.
@@ -73,4 +76,6 @@ public interface Store {
      * @param id идентификатор фото.
      */
     void removeImage(int id);
+
+    List<Integer> getUserPhotos(int userId);
 }

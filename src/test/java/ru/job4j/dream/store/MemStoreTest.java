@@ -49,15 +49,19 @@ public class MemStoreTest {
     @Test
     public void whenSaveImageThenSuccess() {
         Store store = MemStore.getInst();
-        store.saveImage("abcd");
-        store.saveImage("dcba");
-        store.saveImage("aaaa");
+        store.saveImage(1, "abcd");
+        store.saveImage(2, "dcba");
+        store.saveImage(2, "aaaa");
         Assert.assertThat(store.getImagePath(1), is("abcd"));
         Assert.assertThat(store.getImagePath(2), is("dcba"));
         Assert.assertThat(store.getImagePath(3), is("aaaa"));
+        Assert.assertThat(store.getUserPhotos(1).size(), is(1));
+        Assert.assertThat(store.getUserPhotos(2).size(), is(2));
         store.removeImage(2);
         Assert.assertThat(store.getImagePath(1), is("abcd"));
-        Assert.assertNull(store.getImagePath(2));
+        Assert.assertThat(store.getImagePath(2), is(""));
         Assert.assertThat(store.getImagePath(3), is("aaaa"));
+        Assert.assertThat(store.getUserPhotos(1).size(), is(1));
+        Assert.assertThat(store.getUserPhotos(2).size(), is(1));
     }
 }

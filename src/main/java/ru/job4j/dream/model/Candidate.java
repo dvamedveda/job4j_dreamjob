@@ -1,5 +1,7 @@
 package ru.job4j.dream.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Objects;
 public class Candidate {
     private int id;
     private String name;
-    private int photoId = 0;
+    private List<Integer> userPhotos = new ArrayList<>();
 
     public Candidate(int id, String name) {
         this.id = id;
@@ -31,12 +33,12 @@ public class Candidate {
         this.name = name;
     }
 
-    public int getPhotoId() {
-        return this.photoId;
+    public List<Integer> getUserPhotos() {
+        return this.userPhotos;
     }
 
-    public void setPhotoId(int photoId) {
-        this.photoId = photoId;
+    public void setUserPhotos(List<Integer> userPhotos) {
+        this.userPhotos = userPhotos;
     }
 
     @Override

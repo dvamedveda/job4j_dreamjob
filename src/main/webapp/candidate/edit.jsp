@@ -32,7 +32,11 @@
     String id = request.getParameter("id");
     candidate = new Candidate(0, "");
     if (id != null && !id.equals("")) {
-        candidate = PsqlStore.getInst().findCandidateById(Integer.parseInt(id));
+        if (Integer.parseInt(id) != 0) {
+            candidate = PsqlStore.getInst().findCandidateById(Integer.parseInt(id));
+        } else {
+            candidate.setUserPhotos(PsqlStore.getInst().getUserPhotos(Integer.parseInt(id)));
+        }
     }
     request.setAttribute("candidate", candidate);
 %>
@@ -47,39 +51,44 @@
                 <% } %>
             </div>
             <div class="card-body">
-                <c:if test='${candidate.photoId > 0 and param["image"] == null}'>
-                    <img src="${pageContext.request.contextPath}/download.do?image_id=${candidate.photoId}"
-                         class="rounded float-start" alt="Фото кандидата"
-                         width="150" height="150"
-                    >
-                </c:if>
-                <c:if test='${param["image"] > 0 and param["image"] != null}'>
-                    <img src="${pageContext.request.contextPath}/download.do?image_id=${param['image']}"
-                         class="rounded float-start" alt="Фото кандидата"
-                         width="150" height="150"
-                    >
+                <c:if test="${candidate.userPhotos.size() != 0}">
+                    <div class="container" style="width:150px" >
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <c:forEach var="carusel_id" items="${candidate.userPhotos}">
+                                    <div class="carousel-item<c:if test="${carusel_id == candidate.userPhotos[0]}"><c:out value=" active"/></c:if>">
+                                        <img src="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}" height="150" class="d-block w-100" alt="...">
+                                    </div>
+                                </c:forEach>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
                 </c:if>
                 <form action="<%=request.getContextPath()%>/candidates.do?id=<%=candidate.getId()%>" method="post">
                     <div class="form-group">
                         <label>Имя</label>
                         <input type="text" class="form-control" name="name" value="${candidate.name}">
-                        <c:if test='${param["image"] > 0}'>
-                            <input type="hidden" name="new_image" value="${param['image']}">
-                        </c:if>
-                        <input type="hidden" name="old_image" value="${candidate.photoId}">
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>
             </div>
             <div class="card-body">
-                <form action="<c:url value='/upload?id=${param.id}'/>" method="post" enctype="multipart/form-data">
+                <form action="<c:url value='/upload?id=${candidate.id}'/>" method="post" enctype="multipart/form-data">
                     <c:if test='${param["image"] == -1}'>
                         <c:out value="Нужно выбрать файл!"/>
                     </c:if>
                     <div class="checkbox">
-                        <input type="file" name="file">
+                        <input type="file" name="file" multiple>
                     </div>
-                    <button type="submit" class="btn btn-primary">Загрузить аватар</button>
+                    <button type="submit" class="btn btn-primary">Загрузить фотографии</button>
                 </form>
             </div>
         </div>

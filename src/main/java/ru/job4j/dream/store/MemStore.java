@@ -3,6 +3,7 @@ package ru.job4j.dream.store;
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class MemStore implements Store {
 
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
-    private final Map<Integer, String> photo = new ConcurrentHashMap<>();
+    private final Map<Integer, Map<Integer, String>> usersWithPhoto = new ConcurrentHashMap<>();
 
     private MemStore() {
         posts.put(1, new Post(1, "Junior Java Job", "Работа для джуниор Java разработчика", 1L));
@@ -66,19 +67,46 @@ public class MemStore implements Store {
     }
 
     @Override
-    public int saveImage(String path) {
+    public int saveImage(int userId, String path) {
         int id = PHOTO_ID.incrementAndGet();
-        this.photo.put(id, path);
+        if (this.usersWithPhoto.containsKey(userId)) {
+            this.usersWithPhoto.get(userId).put(id, path);
+        } else {
+            Map<Integer, String> newUser = new ConcurrentHashMap<>();
+            newUser.put(id, path);
+            this.usersWithPhoto.put(userId, newUser);
+        }
         return id;
     }
 
     @Override
     public String getImagePath(int id) {
-        return this.photo.get(id);
+        String result = "";
+        for (Map<Integer, String> userPhotos : this.usersWithPhoto.values()) {
+            if (userPhotos.containsKey(id)) {
+                result = userPhotos.get(id);
+                break;
+            }
+        }
+        return result;
     }
 
     @Override
     public void removeImage(int id) {
-        this.photo.remove(id);
+        for (Map<Integer, String> userPhotos : this.usersWithPhoto.values()) {
+            if (userPhotos.containsKey(id)) {
+                userPhotos.remove(id);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public List<Integer> getUserPhotos(int userId) {
+        ArrayList<Integer> result = new ArrayList<>();
+        if (this.usersWithPhoto.containsKey(userId)) {
+            result.addAll(this.usersWithPhoto.get(userId).keySet());
+        }
+        return result;
     }
 }

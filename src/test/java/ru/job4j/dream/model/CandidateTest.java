@@ -3,6 +3,8 @@ package ru.job4j.dream.model;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.CoreMatchers.is;
 
 /**
@@ -48,7 +50,7 @@ public class CandidateTest {
     @Test
     public void whenCreateCandidateThenDefaultFoto() {
         Candidate candidate1 = new Candidate(1, "test");
-        Assert.assertThat(candidate1.getPhotoId(), is(0));
+        Assert.assertThat(candidate1.getUserPhotos().size(), is(0));
     }
 
     /**
@@ -57,7 +59,10 @@ public class CandidateTest {
     @Test
     public void whenSetPhotoForCandidateThenSuccess() {
         Candidate candidate1 = new Candidate(1, "test");
-        candidate1.setPhotoId(11);
-        Assert.assertThat(candidate1.getPhotoId(), is(11));
+        ArrayList<Integer> photos = new ArrayList<>();
+        photos.add(11);
+        candidate1.setUserPhotos(photos);
+        Assert.assertThat(candidate1.getUserPhotos().get(0), is(11));
+        Assert.assertThat(candidate1.getUserPhotos().size(), is(1));
     }
 }

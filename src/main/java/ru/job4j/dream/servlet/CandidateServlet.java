@@ -19,12 +19,12 @@ public class CandidateServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         Store store = PsqlStore.getInst();
         Candidate candidate = new Candidate(Integer.parseInt(req.getParameter("id")), req.getParameter("name"));
-        if (!req.getParameter("new_image").equals("")) {
-            candidate.setPhotoId(Integer.parseInt(req.getParameter("new_image")));
-            store.removeImage(Integer.parseInt(req.getParameter("old_image")));
-        } else {
-            candidate.setPhotoId(Integer.parseInt(req.getParameter("old_image")));
-        }
+//        if (!req.getParameter("new_image").equals("")) {
+//            candidate.setPhotoId(Integer.parseInt(req.getParameter("new_image")));
+//            store.removeImage(Integer.parseInt(req.getParameter("old_image")));
+//        } else {
+//            candidate.setPhotoId(Integer.parseInt(req.getParameter("old_image")));
+//        }
         store.saveCandidate(candidate);
         resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
