@@ -1,12 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: blocker
-  Date: 24.11.2020
-  Time: 09:00
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="content" tagdir="/WEB-INF/tags/content" %>
 <%@ page isELIgnored="false" %>
 <!doctype html>
 <html lang="en">
@@ -34,6 +28,12 @@
 </head>
 <body>
 <div class="container pt-3">
+    <c:if test="${requestScope['user'] != null}">
+        <content:navbar auth="${requestScope['user'].name} | Выйти"/>
+    </c:if>
+    <c:if test="${requestScope['user'] == null}">
+        <content:navbar auth="Войти"/>
+    </c:if>
     <dib class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">

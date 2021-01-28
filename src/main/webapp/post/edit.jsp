@@ -1,6 +1,9 @@
 <%@ page import="ru.job4j.dream.model.Post" %>
 <%@ page import="ru.job4j.dream.store.PsqlStore" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="content" tagdir="/WEB-INF/tags/content" %>
+<%@ page isELIgnored="false" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -29,15 +32,22 @@
     if (id != null) {
         post = PsqlStore.getInst().findPostById(Integer.valueOf(id));
     }
+    request.setAttribute("user", request.getSession().getAttribute("user"));
 %>
 <div class="container pt-3">
+    <c:if test="${requestScope['user'] != null}">
+        <content:navbar auth="${requestScope['user'].name} | Выйти"/>
+    </c:if>
+    <c:if test="${requestScope['user'] == null}">
+        <content:navbar auth="Войти"/>
+    </c:if>
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
                 <% if (id == null) { %>
-                    Новая вакансия
+                Новая вакансия
                 <% } else { %>
-                    Редактирование вакансии
+                Редактирование вакансии
                 <% } %>
             </div>
             <div class="card-body">

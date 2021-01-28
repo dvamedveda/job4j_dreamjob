@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="content" tagdir="/WEB-INF/tags/content" %>
 <%@ page isELIgnored="false" %>
 <!doctype html>
 <html lang="en">
@@ -26,6 +27,12 @@
 </head>
 <body>
 <div class="container pt-3">
+    <c:if test="${requestScope['user'] != null}">
+        <content:navbar auth="${requestScope['user'].name} | Выйти"/>
+    </c:if>
+    <c:if test="${requestScope['user'] == null}">
+        <content:navbar auth="Войти"/>
+    </c:if>
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
@@ -44,25 +51,30 @@
                         <tr>
                             <td>
                                 <c:if test="${candidate.userPhotos.size() != 0}">
-                                    <div class="container" style="width:150px" >
-                                        <div id="carousel_${candidate.id}" class="carousel slide" data-ride="carousel" >
+                                    <div class="container" style="width:150px">
+                                        <div id="carousel_${candidate.id}" class="carousel slide" data-ride="carousel">
                                             <div class="carousel-inner">
                                                 <c:forEach var="carusel_id" items="${candidate.userPhotos}">
                                                     <div class="carousel-item<c:if test="${carusel_id == candidate.userPhotos[0]}"><c:out value=" active"/></c:if>">
-                                                            <div class="card" style="height: 200px; width: 150px;">
-                                                                <img src="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}" class="card-img-top" style="height: 120px; width: 120px;" alt="...">
-                                                                <div class="card-body">
-                                                                    <a href="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}" class="btn btn-primary">Скачать</a>
-                                                                </div>
+                                                        <div class="card" style="height: 200px; width: 150px;">
+                                                            <img src="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}"
+                                                                 class="card-img-top"
+                                                                 style="height: 120px; width: 120px;" alt="...">
+                                                            <div class="card-body">
+                                                                <a href="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}"
+                                                                   class="btn btn-primary">Скачать</a>
                                                             </div>
+                                                        </div>
                                                     </div>
                                                 </c:forEach>
                                             </div>
-                                            <a class="carousel-control-prev" href="#carousel_${candidate.id}" role="button" data-slide="prev">
+                                            <a class="carousel-control-prev" href="#carousel_${candidate.id}"
+                                               role="button" data-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                 <span class="sr-only">Previous</span>
                                             </a>
-                                            <a class="carousel-control-next" href="#carousel_${candidate.id}" role="button" data-slide="next">
+                                            <a class="carousel-control-next" href="#carousel_${candidate.id}"
+                                               role="button" data-slide="next">
                                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                 <span class="sr-only">Next</span>
                                             </a>

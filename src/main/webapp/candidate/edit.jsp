@@ -1,4 +1,5 @@
 ﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="content" tagdir="/WEB-INF/tags/content" %>
 <%@ page import="ru.job4j.dream.model.Candidate" %>
 <%@ page import="ru.job4j.dream.store.PsqlStore" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
@@ -39,8 +40,15 @@
         }
     }
     request.setAttribute("candidate", candidate);
+    request.setAttribute("user", request.getSession().getAttribute("user"));
 %>
 <div class="container pt-3">
+    <c:if test="${requestScope['user'] != null}">
+        <content:navbar auth="${requestScope['user'].name} | Выйти"/>
+    </c:if>
+    <c:if test="${requestScope['user'] == null}">
+        <content:navbar auth="Войти"/>
+    </c:if>
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
@@ -52,20 +60,23 @@
             </div>
             <div class="card-body">
                 <c:if test="${candidate.userPhotos.size() != 0}">
-                    <div class="container" style="width:150px" >
+                    <div class="container" style="width:150px">
                         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                             <div class="carousel-inner">
                                 <c:forEach var="carusel_id" items="${candidate.userPhotos}">
                                     <div class="carousel-item<c:if test="${carusel_id == candidate.userPhotos[0]}"><c:out value=" active"/></c:if>">
-                                        <img src="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}" height="150" class="d-block w-100" alt="...">
+                                        <img src="${pageContext.request.contextPath}/download.do?image_id=${carusel_id}"
+                                             height="150" class="d-block w-100" alt="...">
                                     </div>
                                 </c:forEach>
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                               data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Previous</span>
                             </a>
-                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                               data-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
                             </a>
