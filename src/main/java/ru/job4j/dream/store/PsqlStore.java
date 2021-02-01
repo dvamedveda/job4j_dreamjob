@@ -3,6 +3,7 @@ package ru.job4j.dream.store;
 import org.apache.commons.dbcp2.BasicDataSource;
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -287,5 +288,71 @@ public class PsqlStore implements Store {
             e.printStackTrace();
         }
         return userPhotos;
+    }
+
+    @Override
+    public User saveUser(User user) {
+        User result = new User();
+        result.setName(user.getName());
+        result.setEmail(user.getEmail());
+        result.setPassword(user.getPassword());
+        String command = "insert into users(name, email, password) values (?, ?, ?)";
+        try (Connection conn = pool.getConnection();
+             PreparedStatement statement = conn.prepareStatement(command, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getPassword());
+            statement.execute();
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                while (resultSet.next()) {
+                    result.setId(resultSet.getInt(1));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public User getUser(String email) {
+        User result = null;
+        String command = "select * from users where email = ?";
+        try (Connection conn = pool.getConnection();
+             PreparedStatement statement = conn.prepareStatement(command)) {
+            statement.setString(1, email);
+            statement.execute();
+            try (ResultSet rs = statement.getResultSet()) {
+                while (rs.next()) {
+                    result = new User(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("password"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean userExists(String email) {
+        boolean result = false;
+        String command = "select id from users where email = ?";
+        try (Connection conn = pool.getConnection();
+             PreparedStatement statement = conn.prepareStatement(command)) {
+            statement.setString(1, email);
+            statement.execute();
+            try (ResultSet rs = statement.getResultSet()) {
+                if (rs.next()) {
+                    result = true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

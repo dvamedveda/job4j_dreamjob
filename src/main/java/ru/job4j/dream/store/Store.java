@@ -2,6 +2,7 @@ package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,7 +58,7 @@ public interface Store {
      * Сохранить фото в хранилище.
      *
      * @param userId идентификатор пользователя.
-     * @param path путь к фото.
+     * @param path   путь к фото.
      * @return индентификатор фото.
      */
     int saveImage(int userId, String path);
@@ -77,5 +78,35 @@ public interface Store {
      */
     void removeImage(int id);
 
+    /**
+     * Получение всех фотографий кандидата.
+     *
+     * @param userId идентификатор кандидата.
+     * @return список идентификаторов фото кандидата.
+     */
     List<Integer> getUserPhotos(int userId);
+
+    /**
+     * Сохранить юзера.
+     *
+     * @param user объект юзера.
+     * @return объект созданного юзера
+     */
+    User saveUser(User user);
+
+    /**
+     * Получить объект юзера по адресу электронной почты.
+     *
+     * @param email адрес электронной почты.
+     * @return объект юзера.
+     */
+    User getUser(String email);
+
+    /**
+     * Проверить, существует ли уже данный пользователь.
+     *
+     * @param email адрес электронной почты.
+     * @return результат проверки.
+     */
+    boolean userExists(String email);
 }

@@ -2,6 +2,7 @@ package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
+import ru.job4j.dream.model.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,13 +16,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class MemStore implements Store {
     private static final MemStore INST = new MemStore();
-    private static final AtomicInteger POST_ID = new AtomicInteger(4);
-    private static final AtomicInteger CANDIDATE_ID = new AtomicInteger(4);
+    private static final AtomicInteger POST_ID = new AtomicInteger(3);
+    private static final AtomicInteger CANDIDATE_ID = new AtomicInteger(3);
     private static final AtomicInteger PHOTO_ID = new AtomicInteger();
+    private static final AtomicInteger USER_ID = new AtomicInteger(3);
 
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
     private final Map<Integer, Map<Integer, String>> usersWithPhoto = new ConcurrentHashMap<>();
+    private final Map<Integer, User> users = new ConcurrentHashMap<>();
 
     private MemStore() {
         posts.put(1, new Post(1, "Junior Java Job", "Работа для джуниор Java разработчика", 1L));
@@ -30,6 +33,9 @@ public class MemStore implements Store {
         candidates.put(1, new Candidate(1, "Junior Java"));
         candidates.put(2, new Candidate(2, "Middle Java"));
         candidates.put(3, new Candidate(3, "Senior Java"));
+        users.put(1, new User(1, "name1", "email1", "password1"));
+        users.put(2, new User(2, "name2", "email2", "password2"));
+        users.put(3, new User(3, "name3", "email3", "password3"));
     }
 
     public static MemStore getInst() {
@@ -106,6 +112,42 @@ public class MemStore implements Store {
         ArrayList<Integer> result = new ArrayList<>();
         if (this.usersWithPhoto.containsKey(userId)) {
             result.addAll(this.usersWithPhoto.get(userId).keySet());
+        }
+        return result;
+    }
+
+    @Override
+    public User saveUser(User user) {
+        int id = USER_ID.incrementAndGet();
+        User result = new User();
+        result.setId(id);
+        result.setName(user.getName());
+        result.setEmail(user.getEmail());
+        result.setPassword(user.getPassword());
+        this.users.put(id, result);
+        return result;
+    }
+
+    @Override
+    public User getUser(String email) {
+        User result = null;
+        for (User user : this.users.values()) {
+            if (user.getEmail().equals(email)) {
+                result = new User(user.getId(), user.getName(), user.getEmail(), user.getPassword());
+                break;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean userExists(String email) {
+        boolean result = false;
+        for (User user : this.users.values()) {
+            if (user.getEmail().equals(email)) {
+                result = true;
+                break;
+            }
         }
         return result;
     }
