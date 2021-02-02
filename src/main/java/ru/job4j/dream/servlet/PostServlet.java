@@ -30,6 +30,6 @@ public class PostServlet extends HttpServlet {
         if (!req.getSession().isNew()) {
             req.setAttribute("user", req.getSession().getAttribute("user"));
         }
-        req.getRequestDispatcher("posts.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/posts.jsp").forward(req, resp);
     }
 }

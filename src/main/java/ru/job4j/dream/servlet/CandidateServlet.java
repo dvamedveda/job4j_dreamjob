@@ -29,6 +29,6 @@ public class CandidateServlet extends HttpServlet {
         if (!req.getSession().isNew()) {
             req.setAttribute("user", req.getSession().getAttribute("user"));
         }
-        req.getRequestDispatcher("candidates.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/candidates.jsp").forward(req, resp);
     }
 }

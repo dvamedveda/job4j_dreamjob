@@ -59,9 +59,9 @@ public class UploadServlet extends HttpServlet {
         }
         String redirect = "";
         if (successUpload) {
-            redirect = "/candidate/edit.jsp?id=" + req.getParameter("id");
+            redirect = "/editCandidate.do?id=" + req.getParameter("id");
         } else {
-            redirect = "/candidate/edit.jsp?id=" + req.getParameter("id") + "&image=-1";
+            redirect = "/editCandidate.do?id=" + req.getParameter("id") + "&image=-1";
         }
         resp.sendRedirect(req.getContextPath() + redirect);
     }

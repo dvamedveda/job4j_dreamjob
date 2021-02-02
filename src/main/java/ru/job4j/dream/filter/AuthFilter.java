@@ -19,12 +19,8 @@ public class AuthFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        if (uri.endsWith("login.jsp")) {
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
         if (request.getSession().getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
             return;
         }
         filterChain.doFilter(servletRequest, servletResponse);

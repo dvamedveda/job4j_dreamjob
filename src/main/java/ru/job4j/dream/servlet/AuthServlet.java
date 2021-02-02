@@ -26,7 +26,12 @@ public class AuthServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/posts.do");
         } else {
             req.setAttribute("error", "Неверный логин или пароль");
-            req.getRequestDispatcher("login.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
     }
 }

@@ -23,10 +23,6 @@
     <filter-name>AuthFilter</filter-name>
     <url-pattern>*.do</url-pattern>
   </filter-mapping>
-  <filter-mapping>
-    <filter-name>AuthFilter</filter-name>
-    <url-pattern>*.jsp</url-pattern>
-  </filter-mapping>
 
 
 
@@ -55,6 +51,14 @@
     <servlet-name>AuthServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.AuthServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>EditPostServlet</servlet-name>
+    <servlet-class>ru.job4j.dream.servlet.EditPostServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>EditCandidateServlet</servlet-name>
+    <servlet-class>ru.job4j.dream.servlet.EditCandidateServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>PostServlet</servlet-name>
@@ -79,5 +83,13 @@
   <servlet-mapping>
     <servlet-name>AuthServlet</servlet-name>
     <url-pattern>/auth.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>EditPostServlet</servlet-name>
+    <url-pattern>/editPost.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>EditCandidateServlet</servlet-name>
+    <url-pattern>/editCandidate.do</url-pattern>
   </servlet-mapping>
 </web-app>

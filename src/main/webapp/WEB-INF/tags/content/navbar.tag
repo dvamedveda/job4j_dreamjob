@@ -5,22 +5,22 @@
 <div class="row">
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/index.do">Главная</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/index.do">Главная</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/posts.do">Вакансии</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/posts.do">Вакансии</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/candidates.do">Кандидаты</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/post/edit.jsp">Добавить вакансию</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/editPost.do">Добавить вакансию</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Добавить кандидата</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/editCandidate.do">Добавить кандидата</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">${auth}</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/auth.do">${auth}</a>
         </li>
     </ul>
 </div>
