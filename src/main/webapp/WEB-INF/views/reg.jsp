@@ -28,7 +28,7 @@
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Авторизация
+                Регистрация
             </div>
             <div class="card-body">
                 <c:if test="${requestScope.error != null}">
@@ -36,22 +36,20 @@
                         <c:out value="${requestScope.error}"/>
                     </div>
                 </c:if>
-                <c:if test="${requestScope.info != null}">
-                    <div class="alert alert-success" role="alert">
-                        <c:out value="${requestScope.info}"/>
-                    </div>
-                </c:if>
-                <form action="${pageContext.request.contextPath}/auth.do" method="post">
+                <form action="${pageContext.request.contextPath}/register.do" method="post">
                     <div class="form-group">
-                        <label>Почта</label>
+                        <label>Имя</label>
+                        <input type="text" class="form-control" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
                         <input type="text" class="form-control" name="email">
                     </div>
                     <div class="form-group">
                         <label>Пароль</label>
                         <input type="text" class="form-control" name="password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Войти</button>
-                    <a href="${pageContext.request.contextPath}/register.do" class="btn btn-outline-dark ">Регистрация</a>
+                    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                 </form>
             </div>
         </div>

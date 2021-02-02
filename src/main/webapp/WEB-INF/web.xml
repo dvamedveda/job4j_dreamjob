@@ -59,6 +59,10 @@
     <servlet-name>EditCandidateServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.EditCandidateServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>RegServlet</servlet-name>
+    <servlet-class>ru.job4j.dream.servlet.RegServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>PostServlet</servlet-name>
@@ -91,5 +95,9 @@
   <servlet-mapping>
     <servlet-name>EditCandidateServlet</servlet-name>
     <url-pattern>/editCandidate.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RegServlet</servlet-name>
+    <url-pattern>/register.do</url-pattern>
   </servlet-mapping>
 </web-app>
