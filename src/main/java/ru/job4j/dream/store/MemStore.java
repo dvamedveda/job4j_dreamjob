@@ -4,10 +4,7 @@ import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,19 +17,25 @@ public class MemStore implements Store {
     private static final AtomicInteger CANDIDATE_ID = new AtomicInteger(3);
     private static final AtomicInteger PHOTO_ID = new AtomicInteger();
     private static final AtomicInteger USER_ID = new AtomicInteger(3);
+    private static final AtomicInteger CITY_ID = new AtomicInteger(3);
 
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
     private final Map<Integer, Map<Integer, String>> usersWithPhoto = new ConcurrentHashMap<>();
     private final Map<Integer, User> users = new ConcurrentHashMap<>();
+    private final Map<Integer, String> cities = new ConcurrentHashMap<>();
 
     private MemStore() {
+        cities.put(0, "UNKNOWN");
+        cities.put(1, "Москва");
+        cities.put(2, "Владивосток");
+        cities.put(3, "Воронеж");
         posts.put(1, new Post(1, "Junior Java Job", "Работа для джуниор Java разработчика", 1L));
         posts.put(2, new Post(2, "Middle Java Job", "Работа для джуниор Java разработчика", 2L));
         posts.put(3, new Post(3, "Senior Java Job", "Работа для джуниор Java разработчика", 3L));
-        candidates.put(1, new Candidate(1, "Junior Java"));
-        candidates.put(2, new Candidate(2, "Middle Java"));
-        candidates.put(3, new Candidate(3, "Senior Java"));
+        candidates.put(1, new Candidate(1, "Junior Java", 0));
+        candidates.put(2, new Candidate(2, "Middle Java", 0));
+        candidates.put(3, new Candidate(3, "Senior Java", 0));
         users.put(1, new User(1, "name1", "email1", "password1"));
         users.put(2, new User(2, "name2", "email2", "password2"));
         users.put(3, new User(3, "name3", "email3", "password3"));
@@ -150,5 +153,10 @@ public class MemStore implements Store {
             }
         }
         return result;
+    }
+
+    @Override
+    public Map<Integer, String> getCities() {
+        return this.cities;
     }
 }

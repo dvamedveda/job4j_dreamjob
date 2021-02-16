@@ -12,26 +12,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-            crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
+
     <title>Работа мечты</title>
 </head>
 <body>
+
+<script type="text/javascript" src='<c:url value="/scripts/editCandidate.js"/>' defer></script>
 <%!
     Candidate candidate;
 %>
 <%
     String id = request.getParameter("id");
-    candidate = new Candidate(0, "");
+    candidate = new Candidate(0, "", 0);
     if (id != null && !id.equals("")) {
         if (Integer.parseInt(id) != 0) {
             candidate = PsqlStore.getInst().findCandidateById(Integer.parseInt(id));
@@ -83,10 +84,16 @@
                         </div>
                     </div>
                 </c:if>
-                <form action="<%=request.getContextPath()%>/candidates.do?id=<%=candidate.getId()%>" method="post">
-                    <div class="form-group">
+                <form id="candidateInput" action="<%=request.getContextPath()%>/candidates.do?id=<%=candidate.getId()%>" method="post">
+                    <div id="nameInput" class="form-group">
                         <label>Имя</label>
                         <input type="text" class="form-control" name="name" value="${candidate.name}">
+                    </div>
+                    <div id="cityInput" class="form-group">
+                        <label for="selectedCity">Выберите город</label>
+                        <div id="currentCity" class="d-none">${candidate.city}</div>
+                        <select class="custom-select" id="selectedCity" name="city">
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>

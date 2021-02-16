@@ -57,6 +57,7 @@ public class CandidateServletTest {
         Candidate candidate = candidates.stream().filter((currentCandidate) -> currentCandidate.getId() == 2).collect(Collectors.toList()).get(0);
         Assert.assertThat(candidate.getId(), is(2));
         Assert.assertThat(candidate.getName(), is("Middle Java"));
+        Assert.assertThat(candidate.getCity(), is(0));
         Assert.assertThat(candidate.getUserPhotos().size(), is(0));
     }
 
@@ -75,10 +76,12 @@ public class CandidateServletTest {
         HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
         Mockito.when(req.getParameter("id")).thenReturn("11");
         Mockito.when(req.getParameter("name")).thenReturn("Плотник Вася");
+        Mockito.when(req.getParameter("city")).thenReturn("99");
         new CandidateServlet().doPost(req, resp);
-        Candidate addedPost = store.findCandidateById(11);
-        Assert.assertThat(addedPost.getId(), is(11));
-        Assert.assertThat(addedPost.getName(), is("Плотник Вася"));
+        Candidate addedCandidate = store.findCandidateById(11);
+        Assert.assertThat(addedCandidate.getId(), is(11));
+        Assert.assertThat(addedCandidate.getName(), is("Плотник Вася"));
+        Assert.assertThat(addedCandidate.getCity(), is(99));
         Assert.assertThat(store.findAllCandidates().size(), is(4));
     }
 }

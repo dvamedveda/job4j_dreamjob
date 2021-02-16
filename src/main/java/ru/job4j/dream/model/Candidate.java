@@ -10,11 +10,13 @@ import java.util.Objects;
 public class Candidate {
     private int id;
     private String name;
+    private int city;
     private List<Integer> userPhotos = new ArrayList<>();
 
-    public Candidate(int id, String name) {
+    public Candidate(int id, String name, int city) {
         this.id = id;
         this.name = name;
+        this.city = city;
     }
 
     public int getId() {
@@ -41,6 +43,14 @@ public class Candidate {
         this.userPhotos = userPhotos;
     }
 
+    public int getCity() {
+        return this.city;
+    }
+
+    public void setCity(int city) {
+        this.city = city;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -51,11 +61,12 @@ public class Candidate {
         }
         Candidate candidate = (Candidate) o;
         return id == candidate.id
-                && name.equals(candidate.name);
+                && name.equals(candidate.name)
+                && city == candidate.city;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, city);
     }
 }

@@ -4,9 +4,9 @@ import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface Store {
 
@@ -109,4 +109,10 @@ public interface Store {
      * @return результат проверки.
      */
     boolean userExists(String email);
+
+    /**
+     * Получить список всех городов из хранилища.
+     * @return карта-список городов с идентификаторами.
+     */
+    Map<Integer, String> getCities();
 }

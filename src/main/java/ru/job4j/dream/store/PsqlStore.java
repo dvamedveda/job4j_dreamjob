@@ -11,10 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class PsqlStore implements Store {
 
@@ -78,7 +75,8 @@ public class PsqlStore implements Store {
                 while (result.next()) {
                     Candidate candidate = new Candidate(
                             result.getInt("id"),
-                            result.getString("name"));
+                            result.getString("name"),
+                            result.getInt("city_id"));
                     candidate.setUserPhotos(this.getUserPhotos(result.getInt("id")));
                     candidates.add(candidate);
                 }
@@ -143,7 +141,8 @@ public class PsqlStore implements Store {
                 while (result.next()) {
                     candidate = new Candidate(
                             result.getInt("id"),
-                            result.getString("name"));
+                            result.getString("name"),
+                            result.getInt("city_id"));
                     candidate.setUserPhotos(this.getUserPhotos(result.getInt("id")));
                 }
             }
@@ -186,10 +185,11 @@ public class PsqlStore implements Store {
     }
 
     private Candidate createCandidate(Candidate candidate) {
-        String command = "insert into candidate(name) values (?)";
+        String command = "insert into candidate(name, city_id) values (?, ?)";
         try (Connection conn = pool.getConnection();
              PreparedStatement statement = conn.prepareStatement(command, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, candidate.getName());
+            statement.setInt(2, candidate.getCity());
             statement.execute();
             try (ResultSet result = statement.getGeneratedKeys()) {
                 if (result.next()) {
@@ -209,11 +209,12 @@ public class PsqlStore implements Store {
     }
 
     private void updateCandidate(Candidate candidate) {
-        String command = "update candidate set name = ? where id = ?";
+        String command = "update candidate set name = ?, city_id = ? where id = ?";
         try (Connection conn = pool.getConnection();
              PreparedStatement statement = conn.prepareStatement(command)) {
             statement.setString(1, candidate.getName());
-            statement.setInt(2, candidate.getId());
+            statement.setInt(2, candidate.getCity());
+            statement.setInt(3, candidate.getId());
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -348,6 +349,24 @@ public class PsqlStore implements Store {
             try (ResultSet rs = statement.getResultSet()) {
                 if (rs.next()) {
                     result = true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public Map<Integer, String> getCities() {
+        Map<Integer, String> result = new HashMap<>();
+        String command = "select * from city";
+        try (Connection conn = pool.getConnection();
+             PreparedStatement statement = conn.prepareStatement(command)) {
+            statement.execute();
+            try (ResultSet rs = statement.getResultSet()) {
+                while (rs.next()) {
+                    result.put(rs.getInt("id"), rs.getString("name"));
                 }
             }
         } catch (Exception e) {

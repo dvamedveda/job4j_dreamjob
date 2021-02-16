@@ -18,7 +18,10 @@ public class CandidateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         Store store = PsqlStore.getInst();
-        Candidate candidate = new Candidate(Integer.parseInt(req.getParameter("id")), req.getParameter("name"));
+        Candidate candidate = new Candidate(
+                Integer.parseInt(req.getParameter("id")),
+                req.getParameter("name"),
+                Integer.parseInt(req.getParameter("city")));
         store.saveCandidate(candidate);
         resp.sendRedirect(req.getContextPath() + "/candidates.do");
     }
