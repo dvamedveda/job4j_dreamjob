@@ -16,6 +16,7 @@ public class EditCandidateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!req.getSession().isNew()) {
             req.setAttribute("user", req.getSession().getAttribute("user"));
+            req.setAttribute("ajaxToken", req.getSession().getAttribute("ajaxToken"));
         }
         req.getRequestDispatcher("/WEB-INF/views/candidate/edit.jsp").forward(req, resp);
     }

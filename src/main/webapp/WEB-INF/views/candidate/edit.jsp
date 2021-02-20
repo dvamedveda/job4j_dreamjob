@@ -92,6 +92,7 @@
                     <div id="cityInput" class="form-group">
                         <label for="selectedCity">Выберите город</label>
                         <div id="currentCity" class="d-none">${candidate.city}</div>
+                        <div id="ajaxToken" class="d-none">${sessionScope.ajaxToken}</div>
                         <select class="custom-select" id="selectedCity" name="city">
                         </select>
                     </div>

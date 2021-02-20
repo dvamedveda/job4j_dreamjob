@@ -16,6 +16,7 @@ import java.util.*;
 public class PsqlStore implements Store {
 
     private final BasicDataSource pool = new BasicDataSource();
+    private final TokenStorage tokenStorage = new TokenStorage();
 
     private PsqlStore() {
         Properties cfg = new Properties();
@@ -36,6 +37,7 @@ public class PsqlStore implements Store {
         pool.setMinIdle(5);
         pool.setMaxIdle(10);
         pool.setMaxOpenPreparedStatements(100);
+        this.generateTokens();
     }
 
     private static final class Lazy {
@@ -373,5 +375,29 @@ public class PsqlStore implements Store {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public TokenStorage getTokenStorage() {
+        return tokenStorage;
+    }
+
+    private void generateTokens() {
+        String command = "select * from users";
+        try (Connection conn = pool.getConnection(); PreparedStatement statement = conn.prepareStatement(command)) {
+            statement.execute();
+            try (ResultSet rs = statement.getResultSet()) {
+                while (rs.next()) {
+                    User user = new User(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("password"));
+                    tokenStorage.addToken(user);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

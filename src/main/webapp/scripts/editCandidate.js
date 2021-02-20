@@ -7,8 +7,11 @@ $(document).ready(loadCities);
 function loadCities() {
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:8080/dreamjob/getCities.do',
-        dataType: 'json'
+        url: 'http://localhost:8080/dreamjob/ajax/getCities.do',
+        dataType: 'json',
+        beforeSend: function(request) {
+            request.setRequestHeader("Authority", $('#ajaxToken').text());
+        }
     }).done(function (data) {
         let response = JSON.parse(JSON.stringify(data));
         for (const [key, value] of Object.entries(response)) {

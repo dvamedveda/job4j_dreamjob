@@ -112,7 +112,15 @@ public interface Store {
 
     /**
      * Получить список всех городов из хранилища.
+     *
      * @return карта-список городов с идентификаторами.
      */
     Map<Integer, String> getCities();
+
+    /**
+     * Получить хранилище токенов для авторизации CORS-запросов.
+     *
+     * @return хранилище токенов.
+     */
+    TokenStorage getTokenStorage();
 }

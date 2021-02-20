@@ -26,6 +26,8 @@ public class AuthServlet extends HttpServlet {
             if (user.getPassword().equals(password)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("user", user);
+                String token = store.getTokenStorage().getToken(user);
+                session.setAttribute("ajaxToken", token);
                 resp.sendRedirect(req.getContextPath() + "/posts.do");
             } else {
                 errorMessage = "Неверный пароль!";

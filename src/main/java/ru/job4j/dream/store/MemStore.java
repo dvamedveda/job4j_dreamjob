@@ -24,6 +24,8 @@ public class MemStore implements Store {
     private final Map<Integer, Map<Integer, String>> usersWithPhoto = new ConcurrentHashMap<>();
     private final Map<Integer, User> users = new ConcurrentHashMap<>();
     private final Map<Integer, String> cities = new ConcurrentHashMap<>();
+    private final TokenStorage tokenStorage = new TokenStorage();
+
 
     private MemStore() {
         cities.put(0, "UNKNOWN");
@@ -39,6 +41,7 @@ public class MemStore implements Store {
         users.put(1, new User(1, "name1", "email1", "password1"));
         users.put(2, new User(2, "name2", "email2", "password2"));
         users.put(3, new User(3, "name3", "email3", "password3"));
+        generateTokens();
     }
 
     public static MemStore getInst() {
@@ -158,5 +161,16 @@ public class MemStore implements Store {
     @Override
     public Map<Integer, String> getCities() {
         return this.cities;
+    }
+
+    @Override
+    public TokenStorage getTokenStorage() {
+        return tokenStorage;
+    }
+
+    private void generateTokens() {
+        for (User user : this.users.values()) {
+            tokenStorage.addToken(user);
+        }
     }
 }
